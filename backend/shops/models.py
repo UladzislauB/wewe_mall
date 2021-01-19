@@ -1,6 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
-from django.utils.translation import gettext_lazy as _
+
+from authentication.models import User
 
 
 class Color(models.Model):
@@ -52,8 +52,8 @@ class Size(models.Model):
 
 class Product(models.Model):
     class Sex(models.TextChoices):
-        MEN = 'M', _('Men')
-        WOMEN = 'W', _('Women')
+        MEN = 'M', 'Men'
+        WOMEN = 'W', 'Women'
 
     name = models.CharField(max_length=50)
     description = models.TextField(blank=True)
