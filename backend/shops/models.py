@@ -61,6 +61,7 @@ class Product(models.Model):
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
     subcategory = models.ForeignKey(Subcategory, on_delete=models.SET_NULL, null=True)
     color = models.ForeignKey(Color, on_delete=models.SET_NULL, null=True)
+    sizes = models.ManyToManyField(Size, through='ProductSize')
     price = models.IntegerField()
     expiration_date = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now=True)

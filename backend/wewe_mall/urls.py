@@ -15,12 +15,20 @@ Including another URLconf
 """
 from django.conf import settings
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from rest_framework.routers import DefaultRouter
+
+from shops.api.views import ShopViewSet, ProductViewSet
+
+router = DefaultRouter()
+router.register(r'shops', ShopViewSet)
+router.register(r'products', ProductViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/', include(router.urls))
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
