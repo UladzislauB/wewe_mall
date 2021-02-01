@@ -21,12 +21,14 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from rest_framework.routers import DefaultRouter
 
 from shops.api.views import ShopViewSet, ProductViewSet
+from shops.views import home
 
 router = DefaultRouter()
 router.register(r'shops', ShopViewSet)
 router.register(r'products', ProductViewSet)
 
 urlpatterns = [
+    path('', home),
     path('admin/', admin.site.urls),
     path('api/', include(router.urls))
 ]

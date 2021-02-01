@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Home</title>
+</head>
+<body>
+<form enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+    <input type="file" multiple id="files-input" accept="image/*"/>
+    <button id="submit-button" type="submit">Hi there</button>
+</form>
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    let filesInput = document.getElementById('files-input');
+
+    document.getElementById('submit-button').onclick = (ev) => {
+        ev.preventDefault();
+        const formData = new FormData();
+        formData.append('name', 'Tester');
+        formData.append('sex', 'M');
+        formData.append('subcategory', '1');
+        formData.append('color', '1');
+        formData.append('productsize_set', JSON.stringify([
+            {'quantity': 13, 'size': 1},
+            {'quantity': 213, 'size': 2}
+        ]));
+        formData.append('price', '13');
+
+        console.log(formData.entries());
+
+        const request = new Request(
+            '/api/products/', {
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                }
+            }
+        );
+        let ins = filesInput.files.length;
+        for (let i = 0; i < ins; i++) {
+            formData.append("images", filesInput.files[i]);
+        }
+        let options = {
+            method: 'POST',
+            mode: 'same-origin',
+            body: formData,
+        };
+        fetch(request, options)
+            .then(response => response.json())
+            .then(result => console.log(result))
+    }
+</script>
+</body>
+</html>
