@@ -1,10 +1,18 @@
-import logo from "./logo.svg";
+import Header from "./components/header/header.component.jsx";
+import { Switch, Route } from "react-router-dom";
+
 import "./App.css";
-import axios from "axios";
+import HomePage from "./pages/homepage/homepage.component";
 
 function App() {
-  axios.get("/api/shops/").then((res) => console.log(res));
-  return <div className="App">Hello</div>;
+  return (
+    <div className="App">
+      <Header />
+      <Switch>
+        <Route exact path="/" component={HomePage} />
+      </Switch>
+    </div>
+  );
 }
 
 export default App;
