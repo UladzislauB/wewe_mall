@@ -1,0 +1,30 @@
+.shopcard {
+  height: 170px;
+
+  .shopcard__background {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    border-radius: 18px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .shopcard__content {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(0deg, transparent, rgba(0, 0, 0, 0.4));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .shopcard__name {
+    text-align: center;
+    font-size: 34px;
+    line-height: 1.3em;
+    letter-spacing: -.04em;
+    overflow-wrap: break-word;
+    color: white;
+  }
+}

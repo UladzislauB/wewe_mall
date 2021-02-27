@@ -1,5 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Route } from "react-router";
+
+import "./shopspage.styles.scss";
+
+import ShopsOverviewContainer from "../../components/shops-overview/shops-overview.container";
 
 import { selectMenuItemAction } from "../../redux/header/header.actions";
 import { fetchShopsStart } from "../../redux/shops/shops.actions";
@@ -11,7 +16,12 @@ class ShopsPage extends Component {
     fetchShopsStart();
   }
   render() {
-    return <div>Shops</div>;
+    const { match } = this.props;
+    return (
+      <div className="shoppage">
+        <Route path={`${match.path}`} component={ShopsOverviewContainer} />
+      </div>
+    );
   }
 }
 
