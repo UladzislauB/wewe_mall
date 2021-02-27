@@ -1,6 +1,6 @@
-import HeaderTypes from "./header.types";
+import HEADER_TYPES from "./header.types";
 
 export const selectMenuItemAction = (menuItem) => ({
-  type: HeaderTypes.SELECT_MENU_ITEM,
+  type: HEADER_TYPES.SELECT_MENU_ITEM,
   payload: menuItem,
 });

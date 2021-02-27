@@ -13,8 +13,8 @@ const Header = ({ menuItem }) => {
         <Menu.Item key="home">
           <Link to="">Home</Link>
         </Menu.Item>
-        <Menu.Item key="about">
-          <Link to="about">About</Link>
+        <Menu.Item key="shops">
+          <Link to="shops">Shops</Link>
         </Menu.Item>
         <Menu.Item key="search">
           <Link to="search">Search</Link>
