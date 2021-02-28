@@ -1,4 +1,5 @@
 import { createSelector } from "reselect";
+import memoize from "lodash.memoize";
 
 const selectShopsReducer = (state) => state.shops;
 
@@ -16,4 +17,15 @@ export const selectShopsForOverview = createSelector(
 export const selectIsShopListFetching = createSelector(
   [selectShopsReducer],
   (shops) => shops.isFetching
+);
+
+export const selectShopById = memoize((shopId) =>
+  createSelector([selectShops], (shopsMap) =>
+    shopsMap ? shopsMap[shopId] : null
+  )
+);
+
+export const selectIsShopListLoaded = createSelector(
+  [selectShops],
+  (shopsMap) => !!shopsMap
 );

@@ -5,6 +5,7 @@ import { Route } from "react-router";
 import "./shopspage.styles.scss";
 
 import ShopsOverviewContainer from "../../components/shops-overview/shops-overview.container";
+import ShopDetailPageContainer from "../shop-detailpage/shop-detailpage.container";
 
 import { selectMenuItemAction } from "../../redux/header/header.actions";
 import { fetchShopsStart } from "../../redux/shops/shops.actions";
@@ -19,7 +20,15 @@ class ShopsPage extends Component {
     const { match } = this.props;
     return (
       <div className="shoppage">
-        <Route path={`${match.path}`} component={ShopsOverviewContainer} />
+        <Route
+          exact
+          path={`${match.path}`}
+          component={ShopsOverviewContainer}
+        />
+        <Route
+          path={`${match.path}/:shopId`}
+          component={ShopDetailPageContainer}
+        />
       </div>
     );
   }
