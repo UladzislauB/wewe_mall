@@ -3,12 +3,12 @@ import axios from "axios";
 
 import SHOP_TYPES from "./shops.types";
 import { fetchShopsSuccess, fetchShopsFailure } from "./shops.actions";
-import { converShopsToMap } from "./shops.utils";
+import { converArrayOfObjectsToMap } from "../utils";
 
 export function* fetchShopsStart() {
   try {
     const res = yield axios.get("/api/shops/");
-    const shopsMap = yield converShopsToMap(res.data);
+    const shopsMap = yield converArrayOfObjectsToMap(res.data);
     yield put(fetchShopsSuccess(shopsMap));
   } catch (error) {
     yield put(fetchShopsFailure(error.message));
