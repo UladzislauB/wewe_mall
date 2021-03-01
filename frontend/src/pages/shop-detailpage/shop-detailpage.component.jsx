@@ -1,6 +1,7 @@
 import { connect } from "react-redux";
 
 import "./shop-detailpage.styles.scss";
+import Error404Page from "../error404page/error404page.component";
 
 import { selectShopById } from "../../redux/shops/shops.selectors";
 
@@ -15,7 +16,9 @@ const ShopDetailPage = ({ shop }) => {
         <h1 className="shop-detailpage__name">{shop.name}</h1>
       </div>
     </div>
-  ) : <h1>Error 404 not found</h1>;
+  ) : (
+    <Error404Page />
+  );
 };
 
 const mapStateToProps = (state, ownProps) => ({
