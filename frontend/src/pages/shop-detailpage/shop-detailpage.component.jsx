@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 
 import "./shop-detailpage.styles.scss";
 import Error404Page from "../error404page/error404page.component";
+import ProductOverviewContainer from "../../components/products-overview/products-overview.container";
 
 import { selectShopById } from "../../redux/shops/shops.selectors";
 import { fetchProductsByShopStart } from "../../redux/products/products.actions";
@@ -10,7 +11,7 @@ import { fetchProductsByShopStart } from "../../redux/products/products.actions"
 class ShopDetailPage extends React.Component {
   componentDidMount() {
     const { shop, fetchProductsByShopStart } = this.props;
-    fetchProductsByShopStart(shop.id);
+    if (shop) fetchProductsByShopStart(shop.id);
   }
 
   render() {
@@ -23,6 +24,7 @@ class ShopDetailPage extends React.Component {
         <div className="shop-detailpage__content">
           <h1 className="shop-detailpage__name">{shop.name}</h1>
         </div>
+        <ProductOverviewContainer />
       </div>
     ) : (
       <Error404Page />
@@ -35,7 +37,8 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchProductsByShopStart: (shopId) => dispatch(fetchProductsByShopStart(shopId)),
+  fetchProductsByShopStart: (shopId) =>
+    dispatch(fetchProductsByShopStart(shopId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShopDetailPage);

@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Route } from "react-router";
+import { Route, Switch } from "react-router";
 
 import "./shopspage.styles.scss";
 
 import ShopsOverviewContainer from "../../components/shops-overview/shops-overview.container";
 import ShopDetailPageContainer from "../shop-detailpage/shop-detailpage.container";
+import Error404Page from "../error404page/error404page.component";
 
 import { selectMenuItemAction } from "../../redux/header/header.actions";
 import { fetchShopsStart } from "../../redux/shops/shops.actions";
@@ -20,15 +21,19 @@ class ShopsPage extends Component {
     const { match } = this.props;
     return (
       <div className="shoppage">
-        <Route
-          exact
-          path={`${match.path}`}
-          component={ShopsOverviewContainer}
-        />
-        <Route
-          path={`${match.path}/:shopId`}
-          component={ShopDetailPageContainer}
-        />
+        <Switch>
+          <Route
+            exact
+            path={`${match.path}`}
+            component={ShopsOverviewContainer}
+          />
+          <Route
+            exact
+            path={`${match.path}/:shopId`}
+            component={ShopDetailPageContainer}
+          />
+          <Route component={Error404Page} />
+        </Switch>
       </div>
     );
   }
