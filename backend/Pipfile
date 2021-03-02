@@ -9,6 +9,8 @@ pillow = "*"
 djangorestframework = "*"
 marshmallow = "*"
 django-cors-headers = "*"
+djangorestframework-simplejwt = "*"
+pyjwt = "==1.7.1"
 
 [dev-packages]
 
