@@ -36,7 +36,8 @@ class App extends React.Component {
           <Route
             exact
             path="/login"
-            render={() => currentUser ? <Redirect to="/" /> : <SignInAndSignUpPage />}
+            component={SignInAndSignUpPage}
+            // render={() => currentUser ? <Redirect to="/" /> : <SignInAndSignUpPage />}
           />
           <Route component={Error404Page} />
         </Switch>

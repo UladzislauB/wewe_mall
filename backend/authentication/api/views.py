@@ -1,6 +1,7 @@
 from datetime import datetime
 
-from rest_framework import status
+from rest_framework import status, permissions
+from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
@@ -8,7 +9,8 @@ from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework_simplejwt.views import TokenViewBase
 from rest_framework_simplejwt.settings import api_settings
 
-from authentication.api.serializers import TokenObtainPairAndUserSerializer
+from authentication.api.serializers import TokenObtainPairAndUserSerializer, UserSerializer
+from authentication.models import User
 
 
 class TokenViewBaseWithCookies(TokenViewBase):
@@ -59,3 +61,13 @@ class GetCurrentUser(APIView):
             data['email'] = request.user.email
             data['is_salesman'] = request.user.is_salesman
         return Response(data, status=status.HTTP_200_OK)
+
+
+class RegisterNewUser(CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def create(self, request, *args, **kwargs):
+        response = super(RegisterNewUser, self).create(request, *args, **kwargs)
+        response.data.pop('password')
+        return response

@@ -24,7 +24,6 @@ const SignIn = ({ signInError, signInStart }) => {
       initialValues={{
         remember: true,
       }}
-      // onFinish={onFinish}
     >
       <h2 className="title">I already have an accoount</h2>
       <span>Sign in with your email and password</span>
