@@ -3,12 +3,13 @@ import USER_TYPES from "./user.types";
 const INITIAL_STATE = {
   currentUser: null,
   isFetching: false,
-  error: "",
+  signInError: "",
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case USER_TYPES.CHECK_USER_SESSION:
+    case USER_TYPES.SIGN_IN_START:
       return {
         ...state,
         isFetching: true,
@@ -18,14 +19,14 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         currentUser: action.payload,
         isFetching: false,
-        error: "",
+        signInError: "",
       };
     case USER_TYPES.SIGN_IN_FAILURE:
       return {
         ...state,
         isFetching: false,
         currentUser: null,
-        error: action.payload,
+        signInError: action.payload,
       };
     default:
       return state;

@@ -13,3 +13,8 @@ export const signInFalilure = (error) => ({
   type: USER_TYPES.SIGN_IN_FAILURE,
   payload: error,
 });
+
+export const signInStart = (credentials) => ({
+  type: USER_TYPES.SIGN_IN_START,
+  payload: credentials,
+});
