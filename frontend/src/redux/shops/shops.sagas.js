@@ -11,7 +11,7 @@ export function* fetchShopsStart() {
     const shopsMap = yield converArrayOfObjectsToMap(res.data);
     yield put(fetchShopsSuccess(shopsMap));
   } catch (error) {
-    yield put(fetchShopsFailure(error.message));
+    yield put(fetchShopsFailure(error));
   }
 }
 

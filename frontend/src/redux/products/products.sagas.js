@@ -11,7 +11,7 @@ export function* fetchProductsByShopStart({ payload }) {
     const productsMap = yield converArrayOfObjectsToMap(res.data)
     yield put(fetchProductsSuccess(productsMap));
   } catch (error) {
-    yield put(fetchProductsFailure(error.message));
+    yield put(fetchProductsFailure(error));
   }
 }
 

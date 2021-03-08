@@ -2,6 +2,7 @@ from datetime import datetime
 
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework_simplejwt.views import TokenViewBase
@@ -49,3 +50,12 @@ class TokenRefreshAndReceiveUserView(TokenViewBaseWithCookies):
     refresh token to the cookies.
     """
     serializer_class = TokenRefreshSerializer
+
+
+class GetCurrentUser(APIView):
+    def get(self, request):
+        data = {}
+        if request.user.is_authenticated:
+            data['email'] = request.user.email
+            data['is_salesman'] = request.user.is_salesman
+        return Response(data, status=status.HTTP_200_OK)

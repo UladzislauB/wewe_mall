@@ -1,4 +1,7 @@
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
+from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+from authentication.models import User
 
 
 class TokenObtainPairAndUserSerializer(TokenObtainPairSerializer):
@@ -8,3 +11,9 @@ class TokenObtainPairAndUserSerializer(TokenObtainPairSerializer):
         data['is_salesman'] = self.user.is_salesman
 
         return data
+
+
+class UserSerialializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['email', 'is_salesman']
