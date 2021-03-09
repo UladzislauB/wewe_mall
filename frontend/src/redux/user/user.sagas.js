@@ -3,7 +3,13 @@ import axios from "axios";
 import { message } from "antd";
 
 import USER_TYPES from "./user.types";
-import { signInSuccess, signInFalilure } from "./user.actions";
+import {
+  signInSuccess,
+  signInFalilure,
+  signUpFailure,
+  signUpSuccess,
+  signInStart,
+} from "./user.actions";
 
 export function* checkUserSession() {
   try {
@@ -41,6 +47,25 @@ export function* watchSignInStart() {
   yield takeLatest(USER_TYPES.SIGN_IN_START, startSignIn);
 }
 
+export function* startSignUp({ payload }) {
+  try {
+    yield console.log(payload);
+    yield axios.post("/api-auth/register/", payload);
+    yield put(signUpSuccess());
+    yield put(signInStart(payload));
+  } catch (error) {
+    yield put(signUpFailure(error.message));
+  }
+}
+
+export function* watchSignUpStart() {
+  yield takeLatest(USER_TYPES.SIGN_UP_START, startSignUp);
+}
+
 export function* userSagas() {
-  yield all([call(watchCheckUserSession), call(watchSignInStart)]);
+  yield all([
+    call(watchCheckUserSession),
+    call(watchSignInStart),
+    call(watchSignUpStart),
+  ]);
 }

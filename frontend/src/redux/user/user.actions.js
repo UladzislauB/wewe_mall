@@ -18,3 +18,17 @@ export const signInStart = (credentials) => ({
   type: USER_TYPES.SIGN_IN_START,
   payload: credentials,
 });
+
+export const signUpStart = (credentials) => ({
+  type: USER_TYPES.SIGN_UP_START,
+  payload: credentials,
+});
+
+export const signUpSuccess = () => ({
+  type: USER_TYPES.SIGN_IN_SUCCESS,
+});
+
+export const signUpFailure = (error) => ({
+  type: USER_TYPES.SIGN_UP_FAILURE,
+  payload: error,
+});

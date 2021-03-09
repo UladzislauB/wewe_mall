@@ -1,22 +1,18 @@
+import { connect } from "react-redux";
 import { useState } from "react";
 import { Form, Input, Button } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
 import "./sign-up.styles.scss";
 
-const SignUp = () => {
-  const [userCredentials, setUserCredentials] = useState({
-    email: "",
-    password1: "",
-  });
+import { signUpStart } from "../../redux/user/user.actions";
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setUserCredentials({ ...userCredentials, [name]: value });
-  };
+const SignUp = ({ signUpStart }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleFinish = () => {
-    console.log(userCredentials);
+    signUpStart({ email, password });
   };
 
   return (
@@ -42,7 +38,7 @@ const SignUp = () => {
         <Input
           prefix={<UserOutlined className="site-form-item-icon" />}
           placeholder="Email"
-          onChange={handleChange}
+          onChange={(event) => setEmail(event.target.value)}
         />
       </Form.Item>
       <Form.Item
@@ -58,7 +54,7 @@ const SignUp = () => {
           prefix={<LockOutlined className="site-form-item-icon" />}
           type="password"
           placeholder="Password"
-          onChange={handleChange}
+          onChange={(event) => setPassword(event.target.value)}
         />
       </Form.Item>
       <Form.Item
@@ -100,4 +96,8 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+const mapDispatchToProps = (dispatch) => ({
+  signUpStart: (credentials) => dispatch(signUpStart(credentials)),
+});
+
+export default connect(null, mapDispatchToProps)(SignUp);
