@@ -9,6 +9,8 @@ import {
   signUpFailure,
   signUpSuccess,
   signInStart,
+  signOutFailure,
+  signOutSuccess,
 } from "./user.actions";
 
 export function* checkUserSession() {
@@ -17,7 +19,7 @@ export function* checkUserSession() {
     const response = yield axios.get("/api-auth/get_user/");
     yield put(signInSuccess(response.data));
   } catch (error) {
-    yield put(signInFalilure(error));
+    yield put(signInFalilure(""));
   }
 }
 
@@ -39,7 +41,7 @@ export function* startSignIn({ payload: { email, password } }) {
   } catch (error) {
     if (error.response.status === 401)
       yield put(signInFalilure(error.response.data["detail"]));
-    else yield put(signInFalilure(error));
+    else yield put(signInFalilure(error.message));
   }
 }
 
@@ -62,10 +64,24 @@ export function* watchSignUpStart() {
   yield takeLatest(USER_TYPES.SIGN_UP_START, startSignUp);
 }
 
+export function* signOutStart() {
+  try {
+    yield axios.post("/api-auth/logout/");
+    yield put(signOutSuccess());
+  } catch (error) {
+    yield put(signOutFailure(error.message));
+  }
+}
+
+export function* watchSignOutStart() {
+  yield takeLatest(USER_TYPES.SIGN_OUT_START, signOutStart);
+}
+
 export function* userSagas() {
   yield all([
     call(watchCheckUserSession),
     call(watchSignInStart),
     call(watchSignUpStart),
+    call(watchSignOutStart),
   ]);
 }

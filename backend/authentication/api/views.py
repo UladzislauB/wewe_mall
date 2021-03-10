@@ -71,3 +71,11 @@ class RegisterNewUser(CreateAPIView):
         response = super(RegisterNewUser, self).create(request, *args, **kwargs)
         response.data.pop('password')
         return response
+
+
+class LogoutView(APIView):
+    def post(self, request):
+        response = Response(status=status.HTTP_200_OK)
+        response.delete_cookie('accessToken')
+        response.delete_cookie('refreshToken')
+        return response
