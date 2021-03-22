@@ -1,0 +1,5 @@
+const HEADER_TYPES = {
+  SELECT_MENU_ITEM: "SELECT_MENU_ITEM",
+};
+
+export default HEADER_TYPES;

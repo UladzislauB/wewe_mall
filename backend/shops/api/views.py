@@ -1,5 +1,6 @@
 from rest_framework import permissions, viewsets, parsers, status
 from rest_framework.response import Response
+from rest_framework.decorators import action
 import json
 
 from shops.exceptions import (
@@ -23,6 +24,13 @@ class ShopViewSet(viewsets.ModelViewSet):
     serializer_class = ShopSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                           IsSalesmanPermission, IsOwnerPermission]
+
+    @action(detail=True, methods=['get'])
+    def products(self, request, pk=None):
+        shop = self.get_object()
+        products = shop.product_set.all()
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)
 
     def perform_create(self, serializer):
         if Shop.objects.filter(owner=self.request.user).first():

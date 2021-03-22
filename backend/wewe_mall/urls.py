@@ -22,6 +22,7 @@ from rest_framework.routers import DefaultRouter
 
 from shops.api.views import ShopViewSet, ProductViewSet
 from shops.views import home
+from authentication import urls
 
 router = DefaultRouter()
 router.register(r'shops', ShopViewSet)
@@ -30,7 +31,8 @@ router.register(r'products', ProductViewSet)
 urlpatterns = [
     path('', home),
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls))
+    path('api/', include(router.urls)),
+    path('api-auth/', include(urls))
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
