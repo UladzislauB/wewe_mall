@@ -1,7 +1,9 @@
-from rest_framework import permissions, viewsets, parsers, status
-from rest_framework.response import Response
-from rest_framework.decorators import action
 import json
+from json import JSONDecodeError
+
+from rest_framework import permissions, viewsets, parsers, status
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from shops.exceptions import (
     UserAlreadyCreatedShopException, ShopNameAlreadyTakenException,
@@ -13,10 +15,8 @@ from .permissions import (
 )
 from .serializers import (
     ShopSerializer, ProductSerializer, ColorSerializer,
-    SubcategorySerializer
+    SubcategorySerializer, ProductSizeSerializer, ProductImageSerializer
 )
-
-from .schemas import ProductSizeSchema
 
 
 class ShopViewSet(viewsets.ModelViewSet):
@@ -27,39 +27,39 @@ class ShopViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'])
     def products(self, request, pk=None):
-        shop = self.get_object()
-        products = shop.product_set.all()
+        products = Product.objects.prefetch_related('images', 'productsize_set').filter(shop_id=pk)
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
 
     def perform_create(self, serializer):
-        if Shop.objects.filter(owner=self.request.user).first():
+        if Shop.objects.filter(owner=self.request.user).exists():
             raise UserAlreadyCreatedShopException()
         name = serializer.validated_data['name']
-        if Shop.objects.filter(name=name).first():
+        if Shop.objects.filter(name=name).exists():
             raise ShopNameAlreadyTakenException()
         serializer.save(owner=self.request.user)
 
-    def perform_destroy(self, instance):
-        self.request.user.shop = None
-        super(ShopViewSet, self).perform_destroy(instance)
-
 
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all()
+    queryset = Product.objects.prefetch_related('images', 'productsize_set')
     serializer_class = ProductSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                           IsSalesmanPermission, IsShopOwnerPermission]
     parser_classes = [parsers.MultiPartParser]
 
     def create(self, request, *args, **kwargs):
-        if 'images' not in request.FILES:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
         data = {key: val for key, val in request.data.items()}
-        # Prepared data for sending to serializer and passing validation
-        data['images'] = [{'image': elem} for elem in request.FILES.getlist('images')]
-        data['productsize_set'] = json.loads(data['productsize_set'])
+
+        # Preparing data for sending to serializer and passing validation
+        try:
+            data['images'] = [{'image': elem} for elem in request.FILES.getlist('images')]
+        except KeyError:
+            data['images'] = []
+
+        try:
+            data['productsize_set'] = json.loads(data['productsize_set'])
+        except (JSONDecodeError, KeyError):
+            data['productsize_set'] = []
 
         # Standard flow of create method
         serializer_class = ProductSerializer(data=data)
@@ -67,10 +67,10 @@ class ProductViewSet(viewsets.ModelViewSet):
         self.perform_create(serializer_class)
 
         # Preparing data to be displayed in response
-        images = [product_image.image.url for product_image in serializer_class.instance.images.all()]
-        productsize_schema = ProductSizeSchema()
-        productsize_set = [productsize_schema.dumps(product_size) for product_size in
-                           serializer_class.instance.productsize_set.all()]
+        images_serializer = ProductImageSerializer(serializer_class.instance.images.all(), many=True)
+        productsize_serializer = ProductSizeSerializer(
+            serializer_class.instance.productsize_set.all(), many=True
+        )
         subcategory_serializer = SubcategorySerializer(
             instance=serializer_class.validated_data['subcategory']
         )
@@ -83,8 +83,8 @@ class ProductViewSet(viewsets.ModelViewSet):
             **serializer_class.validated_data,
             'subcategory': subcategory_serializer.data,
             'color': color_serializer.data,
-            'images': images,
-            'productsize_set': productsize_set,
+            'images': images_serializer.data,
+            'productsize_set': productsize_serializer.data,
         }
 
         return Response(data, status.HTTP_201_CREATED)
@@ -96,6 +96,6 @@ class ProductViewSet(viewsets.ModelViewSet):
         subcategory = serializer.validated_data['subcategory']
         color = serializer.validated_data['color']
         if Product.objects.filter(shop=shop, name=name, sex=sex,
-                                  subcategory=subcategory, color=color).first():
+                                  subcategory=subcategory, color=color).exists():
             raise ProductAlreadyCreatedException()
         serializer.save(shop=shop)

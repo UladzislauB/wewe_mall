@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from shops.models import (
     Shop, Product, ProductImage, ProductSize,
-    Subcategory, Color, Size
+    Subcategory, Color
 )
 
 
@@ -42,6 +42,7 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = ['id', 'name', 'description', 'shop', 'shop_id', 'sex', 'subcategory', 'color', 'color_name',
                   'color_hex', 'price', 'expiration_date', 'productsize_set', 'images']
+        extra_kwargs = {'color': {'required': True}, 'subcategory': {'required': True}}
 
     def create(self, validated_data):
         images = validated_data.pop('images')
